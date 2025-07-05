@@ -467,6 +467,37 @@ QString DkUtils::getAppDataPath()
     return appPath;
 }
 
+QString DkUtils::getTemporaryDirPath()
+{
+    QFileInfo tmpDir(DkSettingsManager::param().global().tmpPath);
+    if (!tmpDir.exists() || !tmpDir.isWritable()) {
+        QDir dir(QDir::tempPath());
+        (void)dir.mkdir("nomacs");
+
+        if (!dir.cd("nomacs")) {
+            qWarning() << "Could not create temporary dir in:" << dir.absolutePath();
+            return {};
+        }
+
+        tmpDir = QFileInfo(dir.absolutePath());
+    }
+    return tmpDir.absoluteFilePath();
+}
+
+QString DkUtils::getTemporaryFilePath(const QString &name, const QString &suffix)
+{
+    QString tmpDir = getTemporaryDirPath();
+    if (tmpDir.isEmpty())
+        return {};
+
+    QString tmpPath = tmpDir % '/' % (name.isEmpty() ? "img" : name) % '-' % DkUtils::nowString();
+
+    if (!suffix.isEmpty())
+        tmpPath = tmpPath % '.' % suffix;
+
+    return tmpPath;
+}
+
 QString DkUtils::getTranslationPath()
 {
     QString trPath;
