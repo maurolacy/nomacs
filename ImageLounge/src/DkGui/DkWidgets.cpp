@@ -1255,6 +1255,7 @@ void DkPlayer::init()
     int timeToDisplayPlayer = 3000;
     timeToDisplay = qRound(DkSettingsManager::param().slideShow().time * 1000);
     playing = false;
+    mCurrentIndex = 0;
     displayTimer = new QTimer(this);
     displayTimer->setInterval(timeToDisplay);
     displayTimer->setSingleShot(true);
@@ -1305,19 +1306,53 @@ void DkPlayer::startTimer()
 
 void DkPlayer::autoNext()
 {
-    emit nextSignal();
+    next();
 }
 
 void DkPlayer::next()
 {
     hideTimer->stop();
+
+    if (!mFileList.isEmpty()) {
+        mCurrentIndex++;
+
+        // Handle looping
+        if (DkSettingsManager::param().global().loop) {
+            mCurrentIndex %= mFileList.size();
+        } else if (mCurrentIndex >= mFileList.size()) {
+            // End of slideshow
+            play(false);
+            return;
+        }
+
+        loadCurrentFile();
+    } else {
+        // Fallback to old behavior for directory mode
     emit nextSignal();
+}
 }
 
 void DkPlayer::previous()
 {
     hideTimer->stop();
+
+    if (!mFileList.isEmpty()) {
+        mCurrentIndex--;
+
+        // Handle looping
+        if (DkSettingsManager::param().global().loop) {
+            while (mCurrentIndex < 0) {
+                mCurrentIndex += mFileList.size();
+            }
+        } else if (mCurrentIndex < 0) {
+            mCurrentIndex = 0;
+        }
+
+        loadCurrentFile();
+    } else {
+        // Fallback to old behavior for directory mode
     emit previousSignal();
+}
 }
 
 bool DkPlayer::isPlaying() const
@@ -1338,6 +1373,95 @@ void DkPlayer::showTemporarily(bool autoHide)
 
     // automatic showing, don't save visibility setting
     DkFadeWidget::show(false);
+}
+
+void DkPlayer::setFileList(const QStringList& files)
+{
+    mFileList = files;
+    mCurrentIndex = 0;
+}
+
+void DkPlayer::setCurrentFile(const QString& filePath)
+{
+    if (mFileList.isEmpty()) {
+        return;
+    }
+
+    int index = mFileList.indexOf(filePath);
+    if (index >= 0) {
+        mCurrentIndex = index;
+    }
+}
+
+QStringList DkPlayer::getFileList() const
+{
+    return mFileList;
+}
+
+int DkPlayer::getCurrentIndex() const
+{
+    return mCurrentIndex;
+}
+
+int DkPlayer::getFileCount() const
+{
+    return mFileList.size();
+}
+
+void DkPlayer::loadCurrentFile()
+{
+    if (mCurrentIndex >= 0 && mCurrentIndex < mFileList.size()) {
+        emit loadFileSignal(mFileList[mCurrentIndex]);
+    }
+}
+
+// -------------------------------------------------------------------- DkHudNavigation
+DkHudNavigation::DkHudNavigation(QWidget *parent)
+    : DkFadeWidget(parent)
+{
+    createLayout();
+}
+
+void DkHudNavigation::createLayout()
+{
+    // previous/next buttons
+    QSize s(64, 64);
+    QColor c(0, 0, 0);
+    c.setAlpha(0);
+
+    mPreviousButton = new QPushButton(DkImage::loadIcon(":/nomacs/img/previous-hud.svg", s, c), "", this);
+    mPreviousButton->setObjectName("hudNavigationButton");
+    mPreviousButton->setToolTip(tr("Show previous image"));
+    mPreviousButton->setFlat(true);
+    mPreviousButton->setIconSize(s);
+    connect(mPreviousButton, &QPushButton::pressed, this, &DkHudNavigation::previousSignal);
+
+    mNextButton = new QPushButton(DkImage::loadIcon(":/nomacs/img/next-hud.svg", s, c), "", this);
+    mNextButton->setObjectName("hudNavigationButton");
+    mNextButton->setToolTip(tr("Show next image"));
+    mNextButton->setFlat(true);
+    mNextButton->setIconSize(s);
+    connect(mNextButton, &QPushButton::pressed, this, &DkHudNavigation::nextSignal);
+
+    auto *l = new QHBoxLayout(this);
+    l->setContentsMargins(0, 0, 0, 0);
+    l->addWidget(mPreviousButton);
+    l->addStretch();
+    l->addWidget(mNextButton);
+}
+
+void DkHudNavigation::showNext()
+{
+    mNextButton->show();
+    DkFadeWidget::show();
+    mPreviousButton->hide();
+}
+
+void DkHudNavigation::showPrevious()
+{
+    mPreviousButton->show();
+    DkFadeWidget::show();
+    mNextButton->hide();
 }
 
 // DkTransformRectangle --------------------------------------------------------------------
