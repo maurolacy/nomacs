@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
             cw->startSlideshowWithFiles(slideshowFiles);
         } else {
             // Directory mode: use current directory for slideshow
-        cw->startSlideshow();
+            cw->startSlideshow();
         }
     }
 
