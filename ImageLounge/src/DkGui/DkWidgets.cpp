@@ -1381,6 +1381,12 @@ void DkPlayer::setFileList(const QStringList& files)
     mCurrentIndex = 0;
 }
 
+void DkPlayer::clearFileList()
+{
+    mFileList.clear();
+    mCurrentIndex = 0;
+}
+
 void DkPlayer::loadCurrentFile()
 {
     if (mCurrentIndex >= 0 && mCurrentIndex < mFileList.size()) {
