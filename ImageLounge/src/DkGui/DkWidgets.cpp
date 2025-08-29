@@ -1328,8 +1328,8 @@ void DkPlayer::next()
         loadCurrentFile();
     } else {
         // Fallback to old behavior for directory mode
-    emit nextSignal();
-}
+        emit nextSignal();
+    }
 }
 
 void DkPlayer::previous()
@@ -1351,8 +1351,8 @@ void DkPlayer::previous()
         loadCurrentFile();
     } else {
         // Fallback to old behavior for directory mode
-    emit previousSignal();
-}
+        emit previousSignal();
+    }
 }
 
 bool DkPlayer::isPlaying() const
@@ -1375,7 +1375,7 @@ void DkPlayer::showTemporarily(bool autoHide)
     DkFadeWidget::show(false);
 }
 
-void DkPlayer::setFileList(const QStringList& files)
+void DkPlayer::setFileList(const QStringList &files)
 {
     mFileList = files;
     mCurrentIndex = 0;
