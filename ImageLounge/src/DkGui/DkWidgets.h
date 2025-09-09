@@ -193,7 +193,7 @@ protected:
 
     // File list support
     QStringList mFileList;
-    int mCurrentIndex;
+    int mCurrentIndex = 0;
 };
 
 extern template class DkFadeMixin<QSlider>;
