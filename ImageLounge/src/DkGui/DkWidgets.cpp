@@ -1394,55 +1394,6 @@ void DkPlayer::loadCurrentFile()
     }
 }
 
-// -------------------------------------------------------------------- DkHudNavigation
-DkHudNavigation::DkHudNavigation(QWidget *parent)
-    : DkFadeWidget(parent)
-{
-    createLayout();
-}
-
-void DkHudNavigation::createLayout()
-{
-    // previous/next buttons
-    QSize s(64, 64);
-    QColor c(0, 0, 0);
-    c.setAlpha(0);
-
-    mPreviousButton = new QPushButton(DkImage::loadIcon(":/nomacs/img/previous-hud.svg", s, c), "", this);
-    mPreviousButton->setObjectName("hudNavigationButton");
-    mPreviousButton->setToolTip(tr("Show previous image"));
-    mPreviousButton->setFlat(true);
-    mPreviousButton->setIconSize(s);
-    connect(mPreviousButton, &QPushButton::pressed, this, &DkHudNavigation::previousSignal);
-
-    mNextButton = new QPushButton(DkImage::loadIcon(":/nomacs/img/next-hud.svg", s, c), "", this);
-    mNextButton->setObjectName("hudNavigationButton");
-    mNextButton->setToolTip(tr("Show next image"));
-    mNextButton->setFlat(true);
-    mNextButton->setIconSize(s);
-    connect(mNextButton, &QPushButton::pressed, this, &DkHudNavigation::nextSignal);
-
-    auto *l = new QHBoxLayout(this);
-    l->setContentsMargins(0, 0, 0, 0);
-    l->addWidget(mPreviousButton);
-    l->addStretch();
-    l->addWidget(mNextButton);
-}
-
-void DkHudNavigation::showNext()
-{
-    mNextButton->show();
-    DkFadeWidget::show();
-    mPreviousButton->hide();
-}
-
-void DkHudNavigation::showPrevious()
-{
-    mPreviousButton->show();
-    DkFadeWidget::show();
-    mNextButton->hide();
-}
-
 // DkTransformRectangle --------------------------------------------------------------------
 DkTransformRect::DkTransformRect(int idx, DkRotatingRect *rect, QWidget *parent, Qt::WindowFlags f)
     : DkWidget(parent, f)
