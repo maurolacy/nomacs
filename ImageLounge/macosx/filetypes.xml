@@ -1,5 +1,5 @@
 <!-- begin list-formats -->
-        <!-- bd555db0, 2025-11-06, custom, macOS Sequoia (15.7.2) -->
+        <!-- 2f85de9e, 2026-05-20, macOS Tahoe (26.5) -->
         <key>CFBundleTypeExtensions</key>
         <array>
           <string>3fr</string>
@@ -34,7 +34,6 @@
           <string>icns</string>
           <string>ico</string>
           <string>iiq</string>
-          <string>ilbm</string>
           <string>im1</string>
           <string>im24</string>
           <string>im32</string>
@@ -55,7 +54,6 @@
           <string>k25</string>
           <string>kdc</string>
           <string>kra</string>
-          <string>lbm</string>
           <string>mdc</string>
           <string>mef</string>
           <string>mng</string>
@@ -69,6 +67,7 @@
           <string>pbm</string>
           <string>pcx</string>
           <string>pdd</string>
+          <string>pdf</string>
           <string>pef</string>
           <string>pfm</string>
           <string>pgm</string>
@@ -117,6 +116,7 @@
         <key>CFBundleTypeMIMETypes</key>
         <array>
           <string>application/envi.hdr</string>
+          <string>application/pdf</string>
           <string>application/postscript</string>
           <string>application/vnd.3gpp.pic-bw-small</string>
           <string>application/vnd.openxmlformats-officedocument.presentationml.presentation</string>
